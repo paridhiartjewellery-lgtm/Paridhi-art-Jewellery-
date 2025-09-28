@@ -3,28 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paridhi Art Jewellery
-  </title>
+  <title>Paridhi Art Jewellery</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCc3tBd6vIss4mNdmXE8JYLPR2xCTcbvFU",
+      authDomain: "paridhi-art-jewellery-2019.firebaseapp.com",
+      databaseURL: "https://paridhi-art-jewellery-2019-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "paridhi-art-jewellery-2019",
+      storageBucket: "paridhi-art-jewellery-2019.firebasestorage.app",
+      messagingSenderId: "631872509409",
+      appId: "1:631872509409:web:96c48dddb05e9828812ea0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
 </head>
+
 <body>
   <header>
     <div class="brand-header">
-        <img src="assests/images/logo.jpg" alt="Logo" class="logo">
-        </div>
-           <h1>Paridhi Art Jewellery</h1>
-           <p>By Madanlal Kumawat</p>
-           <p>Contact: +91-7738905092</p>
-           <p>Room no. 8 Shivalaya Sadan Society Kurar Village Malad East Mumbai Maharashtra</p>
-           <p>Email:paridhiartjewellery@gmail.com</p>
-        </div>
+      <img src="assets/images/logo.jpg" alt="Logo" class="logo" />
+      <h1>Paridhi Art Jewellery</h1>
+      <p>By Madanlal Kumawat</p>
+      <p>Contact: +91-7738905092</p>
+      <p>Room no. 8, Shivalaya Sadan Society, Kurar Village, Malad East, Mumbai, Maharashtra</p>
+      <p>Email: paridhiartjewellery@gmail.com</p>
     </div>
   </header>
 
   <main>
-    <section id="batch-list"></section>
-    <section id="product-list" class="hidden"></section>
-    <section id="image-gallery" class="hidden"></section>
+    <section id="batch-list">
+      <h2>Batches</h2>
+      <ul id="batchList"></ul>
+    </section>
+
+    <section id="product-list" class="hidden">
+      <h2>Products in <span id="selectedBatchName"></span></h2>
+      <ul id="productList"></ul>
+    </section>
+
+    <section id="image-gallery" class="hidden">
+      <h2>Gallery for <span id="selectedProductName"></span></h2>
+      <div id="imageList"></div>
+    </section>
   </main>
 
   <footer>
@@ -34,4 +60,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

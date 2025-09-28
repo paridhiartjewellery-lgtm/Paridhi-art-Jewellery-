@@ -1,20 +1,39 @@
-<!-- admin.html -->
- <script>
-  const password = prompt("Enter admin password:");
-  if (password !== "Shivam@2006") {
-    alert("Access denied.");
-    window.location.href = "index.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script>
+    // Password protection
+    const password = prompt("Enter admin password:");
+    if (password !== "Shivam@2006") {
+      alert("Access denied.");
+      window.location.href = "index.html";
+    }
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
 </head>
+
 <body>
   <h1>Admin Panel</h1>
+
   <section>
     <h2>Batches</h2>
     <input type="text" id="newBatchName" placeholder="New batch name" />
@@ -27,6 +46,7 @@
     <input type="text" id="newProductName" placeholder="New product name" />
     <button onclick="addProduct()">Add Product</button>
     <ul id="productList"></ul>
+
     <h3>Manage Images for <span id="selectedProductName"></span></h3>
     <input type="file" id="imageUpload" multiple />
     <button onclick="uploadImages()">Upload Images</button>
@@ -36,5 +56,3 @@
   <script src="admin.js"></script>
 </body>
 </html>
-<button onclick="copyShareLink()">🔗 Share with Family</button>
-<p id="shareStatus"></p>

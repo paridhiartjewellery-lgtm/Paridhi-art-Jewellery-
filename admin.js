@@ -184,4 +184,24 @@ function copyShareLink() {
   }).catch(() => {
     document.getElementById("shareStatus").textContent = "Failed to copy link.";
   });
+
 }
+function uploadToImageKit(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('fileName', file.name);
+  formData.append('publicKey', 'public_jRXArZ60fh81Z2uQoQZn9XNnCgQ='); // ✅ Correct placement
+
+  fetch('https://upload.imagekit.io/api/v1/files/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log('Uploaded:', data.url);
+    document.getElementById('preview').src = data.url;
+    // Save this URL to gallery or Firebase if needed
+  })
+  .catch(err => console.error('Upload error:', err));
+}
+formData.append('urlEndpoint', 'https://ik.imagekit.io/YOUR_IMAGEKIT_ID');

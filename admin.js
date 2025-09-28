@@ -188,5 +188,7 @@ function renderImageList() {
 
 // Initial load
 renderBatches();
+<script src="admin.js"></script>
+
 
 

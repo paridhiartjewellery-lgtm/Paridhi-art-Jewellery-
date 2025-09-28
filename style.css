@@ -1,0 +1,62 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f7fd;
+}
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+header {
+  background: #c7d437;
+  color: rgb(36, 16, 16);
+  padding: 1rem;
+  text-align: center;
+}
+section {
+  padding: 1rem;
+}
+.hidden {
+  display: none;
+}
+.card {
+  border: 1px solid #341681;
+  padding: 1rem;
+  margin: 0.5rem;
+  background: white;
+  cursor: pointer;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+@media (max-width: 600px) {
+  .brand-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  .card {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  input, button {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}

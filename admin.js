@@ -1,207 +1,192 @@
-let batches = JSON.parse(localStorage.getItem("batches")) || [];
-let selectedBatchIndex = null;
-let selectedProductIndex = null;
+const db = firebase.database();
+let selectedBatch = null;
+let selectedProduct = null;
 
-function saveData() {
-  localStorage.setItem("batches", JSON.stringify(batches));
-}
-
+// Add new batch
 function addBatch() {
   const name = document.getElementById("newBatchName").value.trim();
-  if (name) {
-    batches.push({ name, products: [] });
-    saveData();
-    renderBatches();
-    document.getElementById("newBatchName").value = "";
-  }
+  if (!name) return;
+  db.ref("gallery/" + name).set({});
+  document.getElementById("newBatchName").value = "";
+  renderBatches();
 }
 
+// Render batches
 function renderBatches() {
-  const list = document.getElementById("batchList");
-  list.innerHTML = "";
-  batches.forEach((batch, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <span onclick="selectBatch(${i})">${batch.name}</span>
-      <button onclick="renameBatch(${i})">✏️</button>
-      <button onclick="deleteBatch(${i})">🗑️</button>
-    `;
-    list.appendChild(li);
+  db.ref("gallery").once("value", snapshot => {
+    const list = document.getElementById("batchList");
+    list.innerHTML = "";
+    snapshot.forEach(batch => {
+      const name = batch.key;
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span onclick="selectBatch('${name}')">${name}</span>
+        <button onclick="renameBatch('${name}')">✏️</button>
+        <button onclick="deleteBatch('${name}')">🗑️</button>
+      `;
+      list.appendChild(li);
+    });
   });
 }
-function renameBatch(index) {
-  const newName = prompt("Enter new batch name:", batches[index].name);
-  if (newName) {
-    batches[index].name = newName.trim();
-    saveData();
+
+// Rename batch
+function renameBatch(oldName) {
+  const newName = prompt("Enter new batch name:", oldName);
+  if (!newName || newName === oldName) return;
+  db.ref("gallery/" + oldName).once("value", snapshot => {
+    db.ref("gallery/" + newName).set(snapshot.val());
+    db.ref("gallery/" + oldName).remove();
     renderBatches();
-  }
+  });
 }
-function deleteBatch(index) {
-  if (confirm(`Delete batch "${batches[index].name}"?`)) {
-    batches.splice(index, 1);
-    saveData();
-    renderBatches();
+
+// Delete batch
+function deleteBatch(name) {
+  if (confirm(`Delete batch "${name}"?`)) {
+    db.ref("gallery/" + name).remove();
     document.getElementById("productSection").classList.add("hidden");
+    renderBatches();
   }
 }
 
-function selectBatch(index) {
-  selectedBatchIndex = index;
-  document.getElementById("selectedBatchName").textContent = batches[index].name;
+// Select batch
+function selectBatch(name) {
+  selectedBatch = name;
+  document.getElementById("selectedBatchName").textContent = name;
   document.getElementById("productSection").classList.remove("hidden");
   renderProducts();
 }
 
+// Add product
 function addProduct() {
   const name = document.getElementById("newProductName").value.trim();
-  if (name && selectedBatchIndex !== null) {
-    batches[selectedBatchIndex].products.push({ name, images: [], themeImage: null });
-    saveData();
-    renderProducts();
-    document.getElementById("newProductName").value = "";
-  }
+  if (!name || !selectedBatch) return;
+  db.ref(`gallery/${selectedBatch}/${name}`).set({ themeImage: null });
+  document.getElementById("newProductName").value = "";
+  renderProducts();
 }
 
+// Render products
 function renderProducts() {
-  const list = document.getElementById("productList");
-  list.innerHTML = "";
-  const products = batches[selectedBatchIndex].products;
-  products.forEach((product, i) => {
-    const li = document.createElement("li");
-    const nameSpan = document.createElement("span");
-nameSpan.innerHTML = `
-  <img src="${product.themeImage || 'assets/images/default.jpg'}" width="50" style="vertical-align: middle; margin-right: 8px;" />
-  ${product.name}
-`;
-nameSpan.style.cursor = "pointer";
-nameSpan.onclick = () => selectProduct(i);
-
-const renameBtn = document.createElement("button");
-renameBtn.textContent = "✏️";
-renameBtn.onclick = () => renameProduct(i);
-
-const deleteBtn = document.createElement("button");
-deleteBtn.textContent = "🗑️";
-deleteBtn.onclick = () => deleteProduct(i);
-
-li.appendChild(nameSpan);
-li.appendChild(renameBtn);
-li.appendChild(deleteBtn);
-    
-    list.appendChild(li);
+  db.ref(`gallery/${selectedBatch}`).once("value", snapshot => {
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+    snapshot.forEach(product => {
+      const name = product.key;
+      const data = product.val();
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span onclick="selectProduct('${name}')">
+          <img src="${data.themeImage || 'assets/images/default.jpg'}" width="50" style="vertical-align: middle; margin-right: 8px;" />
+          ${name}
+        </span>
+        <button onclick="renameProduct('${name}')">✏️</button>
+        <button onclick="deleteProduct('${name}')">🗑️</button>
+      `;
+      list.appendChild(li);
+    });
   });
 }
-function renameProduct(index) {
-  const newName = prompt("Enter new product name:", batches[selectedBatchIndex].products[index].name);
-  if (newName) {
-    batches[selectedBatchIndex].products[index].name = newName.trim();
-    saveData();
+
+// Rename product
+function renameProduct(oldName) {
+  const newName = prompt("Enter new product name:", oldName);
+  if (!newName || newName === oldName) return;
+  db.ref(`gallery/${selectedBatch}/${oldName}`).once("value", snapshot => {
+    db.ref(`gallery/${selectedBatch}/${newName}`).set(snapshot.val());
+    db.ref(`gallery/${selectedBatch}/${oldName}`).remove();
+    renderProducts();
+  });
+}
+
+// Delete product
+function deleteProduct(name) {
+  if (confirm(`Delete product "${name}"?`)) {
+    db.ref(`gallery/${selectedBatch}/${name}`).remove();
     renderProducts();
   }
 }
-function deleteProduct(index) {
-  const product = batches[selectedBatchIndex].products[index];
-  if (confirm(`Delete product "${product.name}"?`)) {
-    batches[selectedBatchIndex].products.splice(index, 1);
-    saveData();
-    renderProducts();
-  }
-}
-function selectProduct(index) {
-  selectedProductIndex = index;
-  document.getElementById("selectedProductName").textContent =
-    batches[selectedBatchIndex].products[index].name;
+
+// Select product
+function selectProduct(name) {
+  selectedProduct = name;
+  document.getElementById("selectedProductName").textContent = name;
   renderImageList();
 }
 
+// Upload images to ImageKit and save to Firebase
 function uploadImages() {
   const files = document.getElementById("imageUpload").files;
-  const product = batches[selectedBatchIndex].products[selectedProductIndex];
-  for (let file of files) {
+  if (!files.length || !selectedBatch || !selectedProduct) return;
+
+  Array.from(files).forEach(file => {
     if (!file.type.startsWith("image/")) {
       alert("Only image files are allowed.");
-      continue;
+      return;
     }
-    const url = URL.createObjectURL(file);
-    product.images.push(url);
-  }
-  saveData();
-  renderImageList();
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    formData.append("publicKey", "public_jRXArZ60fh81Z2uQoQZn9XNnCgQ=");
+    formData.append("urlEndpoint", "https://ik.imagekit.io/YOUR_IMAGEKIT_ID");
+
+    fetch("https://upload.imagekit.io/api/v1/files/upload", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      const imageUrl = data.url;
+      db.ref(`gallery/${selectedBatch}/${selectedProduct}/images`).push(imageUrl);
+      renderImageList();
+    })
+    .catch(err => console.error("Upload error:", err));
+  });
 }
 
+// Render image list
 function renderImageList() {
-  const list = document.getElementById("imageList");
-  list.innerHTML = "";
-  const product = batches[selectedBatchIndex].products[selectedProductIndex];
+  db.ref(`gallery/${selectedBatch}/${selectedProduct}/images`).once("value", snapshot => {
+    const list = document.getElementById("imageList");
+    list.innerHTML = "";
+    snapshot.forEach((imgSnap, i) => {
+      const src = imgSnap.val();
+      const key = imgSnap.key;
 
-  product.images.forEach((src, i) => {
-    const li = document.createElement("li");
+      const li = document.createElement("li");
+      const img = document.createElement("img");
+      img.src = src;
+      img.width = 100;
+      img.alt = `Image ${i + 1}`;
+      img.onerror = () => {
+        img.src = "assets/images/default.jpg";
+        img.alt = "Image failed to load";
+      };
 
-    const img = document.createElement("img");
-    img.src = src;
-    img.width = 100;
-    img.alt = `Image ${i + 1}`;
-    img.onerror = () => {
-      img.src = "assets/images/default.jpg"; // fallback image
-      img.alt = "Image failed to load";
-    };
+      const setBtn = document.createElement("button");
+      setBtn.textContent = "Set as Theme";
+      setBtn.onclick = () => {
+        db.ref(`gallery/${selectedBatch}/${selectedProduct}/themeImage`).set(src);
+        renderProducts();
+      };
 
-    const setBtn = document.createElement("button");
-    setBtn.textContent = "Set as Theme";
-    setBtn.onclick = () => setThemeImage(i);
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Delete";
+      delBtn.onclick = () => {
+        db.ref(`gallery/${selectedBatch}/${selectedProduct}/images/${key}`).remove();
+        renderImageList();
+      };
 
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "Delete";
-    delBtn.onclick = () => deleteImage(i);
-
-    li.appendChild(img);
-    li.appendChild(setBtn);
-    li.appendChild(delBtn);
-    list.appendChild(li);
+      li.appendChild(img);
+      li.appendChild(setBtn);
+      li.appendChild(delBtn);
+      list.appendChild(li);
+    });
   });
 }
 
-
-function deleteImage(index) {
-  const product = batches[selectedBatchIndex].products[selectedProductIndex];
-  const imageName = `Image ${index + 1}`;
-  if (confirm(`Delete ${imageName}?`)) {
-    const deleted = product.images.splice(index, 1)[0];
-    if (product.themeImage === deleted) {
-      product.themeImage = null;
-    }
-    saveData();
-    renderImageList();
-  }
-}
-
+// Initial load
 renderBatches();
-function copyShareLink() {
-  const link = window.location.origin + "/index.html";
-  navigator.clipboard.writeText(link).then(() => {
-    document.getElementById("shareStatus").textContent = "Link copied! You can paste it in WhatsApp or SMS.";
-  }).catch(() => {
-    document.getElementById("shareStatus").textContent = "Failed to copy link.";
-  });
 
-}
-function uploadToImageKit(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('fileName', file.name);
-  formData.append('publicKey', 'public_jRXArZ60fh81Z2uQoQZn9XNnCgQ='); // ✅ Correct placement
 
-  fetch('https://upload.imagekit.io/api/v1/files/upload', {
-    method: 'POST',
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log('Uploaded:', data.url);
-    document.getElementById('preview').src = data.url;
-    // Save this URL to gallery or Firebase if needed
-  })
-  .catch(err => console.error('Upload error:', err));
-}
-formData.append('urlEndpoint', 'https://ik.imagekit.io/YOUR_IMAGEKIT_ID');

@@ -265,9 +265,6 @@ function deleteImage(index) {
   }
 }
 
-// Initial call to check login and load data
-checkAdminLogin();
-
 // IMPORTANT: This function must be defined after everything else
 function copyShareLink() {
   const link = window.location.origin + "/index.html";
@@ -277,3 +274,6 @@ function copyShareLink() {
     document.getElementById("shareStatus").textContent = "Failed to copy link.";
   });
 }
+
+// Initial call to check login and load data
+window.onload = checkAdminLogin;

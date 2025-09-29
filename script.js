@@ -1,11 +1,33 @@
-const batches = JSON.parse(localStorage.getItem("batches")) || [];
+// Firestore से डेटाबेस को initialize करें
+const db = firebase.firestore();
 
+let batches = [];
 let currentBatch = null;
 let currentProduct = null;
 
+// Firebase से data load करें
+async function loadDataAndRender() {
+  try {
+    const doc = await db.collection("websiteData").doc("batches").get();
+    if (doc.exists) {
+      batches = doc.data().batches;
+    } else {
+      console.log("No data found in Firestore.");
+      batches = [];
+    }
+    renderBatches();
+  } catch (error) {
+    console.error("Error loading data from Firestore:", error);
+  }
+}
+
+// Batches को दिखाएं
 function renderBatches() {
   const container = document.getElementById("batch-list");
   container.innerHTML = "<h2>Collections</h2>";
+  if (batches.length === 0) {
+    container.innerHTML += "<p>No collections available yet. Please check back later!</p>";
+  }
   batches.forEach((batch, i) => {
     const div = document.createElement("div");
     div.className = "card";
@@ -15,6 +37,7 @@ function renderBatches() {
   });
 }
 
+// Products को दिखाएं
 function showProducts(batchIndex) {
   currentBatch = batches[batchIndex];
   document.getElementById("batch-list").classList.add("hidden");
@@ -23,13 +46,24 @@ function showProducts(batchIndex) {
   container.innerHTML = `<h2>${currentBatch.name}</h2>`;
   currentBatch.products.forEach((product, i) => {
     const div = document.createElement("div");
-    div.className = "card";
-    div.textContent = product.name;
+    div.className = "card product-card"; // Add a class for styling
     div.onclick = () => showImages(i);
+
+    const img = document.createElement("img");
+    img.src = product.themeImage || 'assets/images/default.jpg';
+    img.alt = product.name;
+    
+    const name = document.createElement("p");
+    name.textContent = product.name;
+
+    div.appendChild(img);
+    div.appendChild(name);
+    
     container.appendChild(div);
   });
 }
 
+// Images को दिखाएं
 function showImages(productIndex) {
   currentProduct = currentBatch.products[productIndex];
   document.getElementById("product-list").classList.add("hidden");
@@ -48,6 +82,8 @@ function showImages(productIndex) {
     container.appendChild(img);
   });
 }
+
+// Fullscreen image viewer
 function openFullscreen(src) {
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -74,7 +110,7 @@ function openFullscreen(src) {
     scale = scale === 1 ? 2 : 1;
     img.style.transform = `scale(${scale})`;
     img.style.cursor = scale === 1 ? "zoom-in" : "zoom-out";
-    e.stopPropagation(); // prevent closing overlay
+    e.stopPropagation();
   };
 
   overlay.appendChild(img);
@@ -82,16 +118,18 @@ function openFullscreen(src) {
   document.body.appendChild(overlay);
 }
 
+// Back button functionality
 function goBack() {
-  if (!currentProduct && currentBatch) {
-    currentBatch = null;
-    document.getElementById("product-list").classList.add("hidden");
-    document.getElementById("batch-list").classList.remove("hidden");
-  } else if (currentProduct) {
+  if (currentProduct) {
     currentProduct = null;
     document.getElementById("image-gallery").classList.add("hidden");
     document.getElementById("product-list").classList.remove("hidden");
+  } else if (currentBatch) {
+    currentBatch = null;
+    document.getElementById("product-list").classList.add("hidden");
+    document.getElementById("batch-list").classList.remove("hidden");
   }
 }
 
-renderBatches();
+// Initial call to load data
+loadDataAndRender();

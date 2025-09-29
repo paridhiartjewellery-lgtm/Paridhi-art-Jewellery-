@@ -1,36 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paridhi Art Jewellery
-  </title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paridhi Art Jewellery</title>
+  <link rel="stylesheet" href="style.css" />
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyALTuDEFOFs-am2LU4OS5HJOQPwEHys-K8",
+  authDomain: "paridhi-art-jewellery-149b9.firebaseapp.com",
+  projectId: "paridhi-art-jewellery-149b9",
+  storageBucket: "paridhi-art-jewellery-149b9.firebasestorage.app",
+  messagingSenderId: "249109069877",
+  appId: "1:249109069877:web:5b18291ddd0e4830a0317c"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+</script>
+
 </head>
 <body>
-  <header>
-    <div class="brand-header">
-        <img src="assests/images/logo.jpg" alt="Logo" class="logo">
-        </div>
-           <h1>Paridhi Art Jeweller</h1>
-           <p>By Madanlal Kumawat</p>
-           <p>Contact: +91-7738905092</p>
-           <p>Room no. 8 Shivalaya Sadan Society Kurar Village Malad East Mumbai Maharashtra</p>
-           <p>Email:paridhiartjewellery@gmail.com</p>
-        </div>
-    </div>
-  </header>
+  <header>
+    <div class="brand-header">
+        <img src="assests/images/logo.jpg" alt="Logo" class="logo">
+    </div>
+    <h1>Paridhi Art Jeweller</h1>
+    <p>By Madanlal Kumawat</p>
+    <p>Contact: +91-7738905092</p>
+    <p>Room no. 8 Shivalaya Sadan Society Kurar Village Malad East Mumbai Maharashtra</p>
+    <p>Email:paridhiartjewellery@gmail.com</p>
+  </div>
+  </header>
 
-  <main>
-    <section id="batch-list"></section>
-    <section id="product-list" class="hidden"></section>
-    <section id="image-gallery" class="hidden"></section>
-  </main>
+  <main>
+    <section id="batch-list"></section>
+    <section id="product-list" class="hidden"></section>
+    <section id="image-gallery" class="hidden"></section>
+  </main>
 
-  <footer>
-    <button onclick="goBack()">Back</button>
-  </footer>
+  <footer>
+    <button onclick="goBack()">Back</button>
+  </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

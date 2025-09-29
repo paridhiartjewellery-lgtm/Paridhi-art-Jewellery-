@@ -1,39 +1,51 @@
-<!-- admin.html -->
- <script>
-  const password = prompt("Enter admin password:");
-  if (password !== "Shivam@2006") {
-    alert("Access denied.");
-    window.location.href = "index.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyALTuDEFOFs-am2LU4OS5HJOQPwEHys-K8",
+  authDomain: "paridhi-art-jewellery-149b9.firebaseapp.com",
+  projectId: "paridhi-art-jewellery-149b9",
+  storageBucket: "paridhi-art-jewellery-149b9.firebasestorage.app",
+  messagingSenderId: "249109069877",
+  appId: "1:249109069877:web:5b18291ddd0e4830a0317c"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+  </script>
+
 </head>
 <body>
-  <h1>Admin Panel</h1>
-  <section>
-    <h2>Batches</h2>
-    <input type="text" id="newBatchName" placeholder="New batch name" />
-    <button onclick="addBatch()">Add Batch</button>
-    <ul id="batchList"></ul>
-  </section>
+  <h1>Admin Panel</h1>
+  <section>
+    <h2>Batches</h2>
+    <input type="text" id="newBatchName" placeholder="New batch name" />
+    <button onclick="addBatch()">Add Batch</button>
+    <ul id="batchList"></ul>
+  </section>
 
-  <section id="productSection" class="hidden">
-    <h2>Products in <span id="selectedBatchName"></span></h2>
-    <input type="text" id="newProductName" placeholder="New product name" />
-    <button onclick="addProduct()">Add Product</button>
-    <ul id="productList"></ul>
-    <h3>Manage Images for <span id="selectedProductName"></span></h3>
-    <input type="file" id="imageUpload" multiple />
-    <button onclick="uploadImages()">Upload Images</button>
-    <ul id="imageList"></ul>
-  </section>
+  <section id="productSection" class="hidden">
+    <h2>Products in <span id="selectedBatchName"></span></h2>
+    <input type="text" id="newProductName" placeholder="New product name" />
+    <button onclick="addProduct()">Add Product</button>
+    <ul id="productList"></ul>
+    <h3>Manage Images for <span id="selectedProductName"></span></h3>
+    <input type="file" id="imageUpload" multiple />
+    <button onclick="uploadImages()">Upload Images</button>
+    <ul id="imageList"></ul>
+  </section>
 
-  <script src="admin.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>
 <button onclick="copyShareLink()">🔗 Share with Family</button>

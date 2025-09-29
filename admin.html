@@ -10,18 +10,16 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyALTuDEFOFs-am2LU4OS5HJOQPwEHys-K8",
-  authDomain: "paridhi-art-jewellery-149b9.firebaseapp.com",
-  projectId: "paridhi-art-jewellery-149b9",
-  storageBucket: "paridhi-art-jewellery-149b9.firebasestorage.app",
-  messagingSenderId: "249109069877",
-  appId: "1:249109069877:web:5b18291ddd0e4830a0317c"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+    // Yahan par aapka Firebase configuration code aayega
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
   </script>
 
 </head>
@@ -48,5 +46,3 @@ const app = initializeApp(firebaseConfig);
   <script src="admin.js"></script>
 </body>
 </html>
-<button onclick="copyShareLink()">🔗 Share with Family</button>
-<p id="shareStatus"></p>

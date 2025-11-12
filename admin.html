@@ -11,15 +11,19 @@
 
   <script>
     // Yahan par aapka Firebase configuration code aayega
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
+const firebaseConfig = {
+  apiKey: "AIzaSyA-myfEItcRC4uULCNkVMP0KNu3sSST2tg",
+  authDomain: "paridhi-art-jewellery-87f66.firebaseapp.com",
+  projectId: "paridhi-art-jewellery-87f66",
+  storageBucket: "paridhi-art-jewellery-87f66.firebasestorage.app",
+  messagingSenderId: "128306195473",
+  appId: "1:128306195473:web:8b54082d566750b16a15b0",
+  measurementId: "G-GJSRK80BVN"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
   </script>
 
 </head>
@@ -46,3 +50,4 @@
   <script src="admin.js"></script>
 </body>
 </html>
+

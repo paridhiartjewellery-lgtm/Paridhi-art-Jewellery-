@@ -265,15 +265,6 @@ function deleteImage(index) {
   }
 }
 
-// IMPORTANT: This function must be defined after everything else
-function copyShareLink() {
-  const link = window.location.origin + "/index.html";
-  navigator.clipboard.writeText(link).then(() => {
-    document.getElementById("shareStatus").textContent = "Link copied! You can paste it in WhatsApp or SMS.";
-  }).catch(() => {
-    document.getElementById("shareStatus").textContent = "Failed to copy link.";
-  });
-}
-
 // Initial call to check login and load data
 window.onload = checkAdminLogin;
+
